@@ -15,6 +15,8 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
+console.log("Environment:", process.env.ENVIRONMENT);
+console.log("Frontend URL:", process.env.FRONTEND_URL);
 
 const developmentOrigins = [
     process.env.FRONTEND_URL,
