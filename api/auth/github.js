@@ -1,0 +1,37 @@
+const router = require("express").Router();
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+// /api/auth/github
+router.get(
+    "/github",
+    passport.authenticate("github", {
+        scope: ["profile", "user:email"],
+    })
+);
+// /api/auth/github/redirect
+router.get("/github/redirect", passport.authenticate("github", { session: false }), (req, res) => {
+    if (req.user) {
+        const token = jwt.sign(
+            {
+                sub: req.user.id, // Use the user's unique identifier
+                // ... other claims as needed
+            },
+            process.env.COOKIE_KEY,
+            { expiresIn: "1h" }
+        );
+
+        // Redirect with the token as a query parameter
+        res.cookie("jwt", token, {
+            httpOnly: true, // Prevents client-side JS from reading the cookie
+            secure: true, // Ensures the cookie is sent over HTTPS
+            sameSite: "strict", // Mitigates CSRF attacks
+            maxAge: 36000000, // Cookie expiry set to match token expiry (1 hour)
+        }).redirect(process.env.FRONTEND_URL + "?signed=true");
+    } else {
+        res.redirect(process.env.FRONTEND_URL + "/login-failed");
+    }
+});
+
+module.exports = router;
