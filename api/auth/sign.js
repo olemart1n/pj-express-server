@@ -23,8 +23,8 @@ router.post("/sign", async (req, res) => {
                 .cookie("jwt", token, {
                     httpOnly: true, // Prevents client-side JS from reading the cookie
                     secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
-                    sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "strict", // Mitigates CSRF attacks
-                    maxAge: 36000000,
+                    sameSite: "None", // Mitigates CSRF attacks
+                    maxAge: 7 * 86400 * 1000,
                 })
                 .sendData({ name: user.username, token });
     } else {
@@ -40,8 +40,8 @@ router.post("/sign", async (req, res) => {
                 .cookie("jwt", token, {
                     httpOnly: true, // Prevents client-side JS from reading the cookie
                     secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
-                    sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "strict", // Mitigates CSRF attacks
-                    maxAge: 36000000,
+                    sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "None", // Mitigates CSRF attacks
+                    maxAge: 7 * 86400 * 1000,
                 })
                 .sendData({ name: user.username, token });
         } catch (err) {

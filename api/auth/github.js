@@ -19,15 +19,15 @@ router.get("/github/redirect", passport.authenticate("github", { session: false 
                 // ... other claims as needed
             },
             process.env.COOKIE_KEY,
-            { expiresIn: "1h" }
+            { expiresIn: "7d" }
         );
 
         // Redirect with the token as a query parameter
         res.cookie("jwt", token, {
             httpOnly: true, // Prevents client-side JS from reading the cookie
             secure: true, // Ensures the cookie is sent over HTTPS
-            sameSite: "strict", // Mitigates CSRF attacks
-            maxAge: 36000000, // Cookie expiry set to match token expiry (1 hour)
+            sameSite: "None", // Mitigates CSRF attacks
+            maxAge: 7 * 86400 * 1000, // Cookie expiry set to match token expiry (1 hour)
         }).redirect(process.env.FRONTEND_URL + "?signed=true");
     } else {
         res.redirect(process.env.FRONTEND_URL + "/login-failed");

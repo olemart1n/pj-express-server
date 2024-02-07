@@ -18,13 +18,13 @@ router.get("/google/redirect", passport.authenticate("google", { session: false 
                 sub: req.user.id,
             },
             process.env.COOKIE_KEY,
-            { expiresIn: "1h" }
+            { expiresIn: "7d" }
         );
         res.cookie("jwt", token, {
             httpOnly: true, // Prevents client-side JS from reading the cookie
             secure: true, // Ensures the cookie is sent over HTTPS
-            sameSite: "strict", // Mitigates CSRF attacks
-            maxAge: 36000000,
+            sameSite: "None", // Mitigates CSRF attacks
+            maxAge: 7 * 86400 * 1000,
         }).redirect(process.env.FRONTEND_URL + "?signed=true");
     } else {
         res.redirect(process.env.FRONTEND_URL + "/login-failed");
