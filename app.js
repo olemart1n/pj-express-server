@@ -47,6 +47,7 @@ app.use(express.json());
 app.use(sendResponse);
 app.set("view engine, ejs");
 app.use("/api", api);
+app.set("trust proxy", 1);
 app.get("/", (req, res) => {
     res.send("server is up and running");
 });
