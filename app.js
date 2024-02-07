@@ -27,7 +27,15 @@ const productionOrigin = process.env.FRONTEND_URL;
 app.use(cookieParser());
 app.use(
     cors({
-        origin: process.env.ENVIRONMENT === "dev" ? developmentOrigins : productionOrigin,
+        origin: (origin, callback) => {
+            const allowedOrigins =
+                process.env.ENVIRONMENT === "dev" ? developmentOrigins : [productionOrigin];
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );
@@ -39,7 +47,9 @@ app.use(express.json());
 app.use(sendResponse);
 app.set("view engine, ejs");
 app.use("/api", api);
-
+app.get("/", (req, res) => {
+    res.send("server is up and running");
+});
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
