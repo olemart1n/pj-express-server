@@ -30,6 +30,7 @@ app.use(
         origin: (origin, callback) => {
             const allowedOrigins =
                 process.env.ENVIRONMENT === "dev" ? developmentOrigins : [productionOrigin];
+
             if (!origin || allowedOrigins.includes(origin)) {
                 callback(null, true);
             } else {
@@ -47,9 +48,20 @@ app.use(express.json());
 app.use(sendResponse);
 app.set("view engine, ejs");
 app.use("/api", api);
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 app.get("/", (req, res) => {
     res.send("server is up and running");
+});
+app.get("/test", (req, res) => {
+    // console.log(req.body);
+    console.log(process.env.ENVIRONMENT);
+
+    res.cookie("jwt", "testing", {
+        httpOnly: true,
+        secure: process.env.ENVIRONMENT === "dev" ? false : true,
+        sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
+        maxAge: 7 * 86400 * 1000,
+    }).json({ message: "this is sent from the test route" });
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

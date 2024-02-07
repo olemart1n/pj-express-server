@@ -22,8 +22,8 @@ router.get("/google/redirect", passport.authenticate("google", { session: false 
         );
         res.cookie("jwt", token, {
             httpOnly: true, // Prevents client-side JS from reading the cookie
-            secure: true, // Ensures the cookie is sent over HTTPS
-            sameSite: "None", // Mitigates CSRF attacks
+            secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
+            sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
             maxAge: 7 * 86400 * 1000,
         }).redirect(process.env.FRONTEND_URL + "?signed=true");
     } else {
