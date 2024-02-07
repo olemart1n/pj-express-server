@@ -25,6 +25,7 @@ router.post("/sign", async (req, res) => {
                     secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
                     sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
                     maxAge: 7 * 86400 * 1000,
+                    domain: ".planleggjula.no",
                 })
                 .sendData({ name: user.username, token });
     } else {
@@ -42,6 +43,7 @@ router.post("/sign", async (req, res) => {
                     secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
                     sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
                     maxAge: 7 * 86400 * 1000,
+                    domain: ".planleggjula.no",
                 })
                 .sendData({ name: user.username, token });
         } catch (err) {

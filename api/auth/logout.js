@@ -6,6 +6,7 @@ router.get("/logout", (req, res) => {
         secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
         sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
         maxAge: 7 * 86400 * 1000,
+        domain: ".planleggjula.no",
     }).send("logged out");
 });
 module.exports = router;

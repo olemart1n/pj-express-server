@@ -28,6 +28,7 @@ router.get("/github/redirect", passport.authenticate("github", { session: false 
             secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
             sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
             maxAge: 7 * 86400 * 1000,
+            domain: ".planleggjula.no",
         }).redirect(process.env.FRONTEND_URL + "?signed=true");
     } else {
         res.redirect(process.env.FRONTEND_URL + "/login-failed");

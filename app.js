@@ -61,6 +61,7 @@ app.get("/test", (req, res) => {
         secure: process.env.ENVIRONMENT === "dev" ? false : true,
         sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
         maxAge: 7 * 86400 * 1000,
+        domain: ".planleggjula.no",
     }).json({ message: "this is sent from the test route" });
 });
 app.listen(port, () => {
