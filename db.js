@@ -1,3 +1,6 @@
+const Pool = require("pg").Pool;
+require("dotenv").config();
+
 let dbParams = {};
 if (process.env.DATABASE_URL) {
     // If running on Heroku, use the Heroku database URL
