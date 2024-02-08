@@ -8,7 +8,7 @@ require("./config/passport-jwt.js");
 require("./config/userHandling.js");
 
 const passport = require("passport");
-const sendResponse = require("./middleware/cookieOptions.js");
+const sendResponse = require("./middleware/sendResponse.js");
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
