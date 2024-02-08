@@ -24,7 +24,7 @@ router.get("/github/redirect", passport.authenticate("github", { session: false 
         );
 
         // Redirect with the token as a query parameter
-        res.cookie("jwt", token, getCookieOptions).redirect(
+        res.cookie("jwt", token, getCookieOptions()).redirect(
             process.env.FRONTEND_URL + "?signed=true"
         );
     } else {

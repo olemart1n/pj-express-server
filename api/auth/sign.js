@@ -21,7 +21,7 @@ router.post("/sign", async (req, res) => {
         correctPassword &&
             res
                 .status(200)
-                .cookie("jwt", token, getCookieOptions)
+                .cookie("jwt", token, getCookieOptions())
                 .sendData({ name: user.username, token });
     } else {
         const salt = bcrypt.genSaltSync(10);

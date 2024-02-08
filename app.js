@@ -52,18 +52,7 @@ app.use("/api", api);
 app.get("/", (req, res) => {
     res.send("server is up and running");
 });
-app.get("/test", (req, res) => {
-    // console.log(req.body);
-    console.log(process.env.ENVIRONMENT);
 
-    res.cookie("jwt", "testing", {
-        httpOnly: true,
-        secure: process.env.ENVIRONMENT === "dev" ? false : true,
-        sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
-        maxAge: 7 * 86400 * 1000,
-        domain: ".planleggjula.no",
-    }).json({ message: "this is sent from the test route" });
-});
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

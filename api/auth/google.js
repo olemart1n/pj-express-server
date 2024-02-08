@@ -21,7 +21,7 @@ router.get("/google/redirect", passport.authenticate("google", { session: false 
             process.env.COOKIE_KEY,
             { expiresIn: "7d" }
         );
-        res.cookie("jwt", token, getCookieOptions).redirect(
+        res.cookie("jwt", token, getCookieOptions()).redirect(
             process.env.FRONTEND_URL + "?signed=true"
         );
     } else {
