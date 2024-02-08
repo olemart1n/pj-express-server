@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { getCookieOptions } = require("../../middleware");
+const getCookieOptions = require("../../middleware/cookieOptions");
 require("dotenv").config();
 
 // /api/auth/google

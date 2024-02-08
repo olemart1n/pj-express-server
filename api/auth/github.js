@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { getCookieOptions } = require("../../services");
+const getCookieOptions = require("../../middleware/cookieOptions");
 require("dotenv").config();
 
 // /api/auth/github

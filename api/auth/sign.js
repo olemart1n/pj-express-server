@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { getCookieOptions } = require("../../middleware");
+const getCookieOptions = require("../../middleware/cookieOptions");
 const { signUp, findUserByEmail } = require("../../services");
 require("dotenv").config();
 
