@@ -1,7 +1,7 @@
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2");
-const pool = require("../db.js");
-const { findUser, addOAuthUser, findUserById } = require("../services");
+
+const { findUser, addOAuthUser } = require("../services");
 require("dotenv").config();
 
 passport.use(

@@ -49,7 +49,6 @@ router.delete(
         res.sendStatus(200);
         try {
             const res = await pool.query(query, [mealId]);
-            console.log(res);
         } catch (error) {
             console.error(error);
         }

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { getCookieOptions } = require("../../middleware");
 const { signUp, findUserByEmail } = require("../../services");
 require("dotenv").config();
 
@@ -20,13 +21,7 @@ router.post("/sign", async (req, res) => {
         correctPassword &&
             res
                 .status(200)
-                .cookie("jwt", token, {
-                    httpOnly: true, // Prevents client-side JS from reading the cookie
-                    secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
-                    sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
-                    maxAge: 7 * 86400 * 1000,
-                    domain: ".planleggjula.no",
-                })
+                .cookie("jwt", token, getCookieOptions)
                 .sendData({ name: user.username, token });
     } else {
         const salt = bcrypt.genSaltSync(10);
@@ -38,13 +33,7 @@ router.post("/sign", async (req, res) => {
                 expiresIn: "100h",
             });
             res.status(201)
-                .cookie("jwt", token, {
-                    httpOnly: true, // Prevents client-side JS from reading the cookie
-                    secure: process.env.ENVIRONMENT === "dev" ? false : true, // Ensures the cookie is sent over HTTPS
-                    sameSite: process.env.ENVIRONMENT === "dev" ? "Lax" : "none", // Adjust for local testing
-                    maxAge: 7 * 86400 * 1000,
-                    domain: ".planleggjula.no",
-                })
+                .cookie("jwt", token, getCookieOptions)
                 .sendData({ name: user.username, token });
         } catch (err) {
             res.sendError(err);
