@@ -27,7 +27,7 @@ router.get("/meal", passport.authenticate("jwt", { session: false }), async (req
                 [userId, name]
             );
 
-            res.sendData({ ...newMeal.rows[0], ingredients: [] });
+            res.sendData({ meal: newMeal.rows[0], ingredients: [] });
         }
     } catch (error) {
         console.error("Error executing query", error.stack);

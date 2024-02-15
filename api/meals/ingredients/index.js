@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const passport = require("passport");
 const pool = require("../../../db");
+const ribbe = require("../predefined-meals/ribbe");
+const lutefisk = require("../predefined-meals/lutefisk");
 require("dotenv").config();
 
 router.post("/ingredients", passport.authenticate("jwt", { session: false }), async (req, res) => {
@@ -24,6 +26,47 @@ router.post("/ingredients", passport.authenticate("jwt", { session: false }), as
         res.sendError(error);
     }
 });
+router.post(
+    "/ingredients/premade",
+    passport.authenticate("jwt", { session: false }),
+    async (req, res) => {
+        const { meal, mealId, guestCount } = req.body;
+        const premadeMeal = meal === "Ribbe" ? ribbe : lutefisk;
+        const returnObject = { meal: null, ingredients: [] };
+
+        try {
+            for (const ingredient of premadeMeal) {
+                ingredient.meal_id = mealId;
+                const columns = Object.keys(ingredient).join(", ");
+                const placeholders = Object.keys(ingredient)
+                    .map((_, i) => `$${i + 1}`)
+                    .join(", ");
+                const values = Object.values(ingredient);
+                const query = `INSERT INTO Ingredients (${columns}) VALUES (${placeholders}) RETURNING *`;
+                const { rows } = await pool.query(query, values);
+                returnObject.ingredients.push(rows[0]);
+            }
+        } catch (error) {
+            console.error("Error inserting ingredients:", error);
+            res.status(500).json({ error: "Failed to insert ingredients" });
+            return;
+        }
+        try {
+            const updateQuery = "UPDATE Meals SET guests = $1 WHERE id = $2 RETURNING *";
+            const values = [Number(guestCount), Number(mealId)];
+            const result = await pool.query(updateQuery, values);
+            if (result.rows.length > 0) {
+                returnObject.meal = result.rows[0];
+                res.sendData(returnObject);
+            } else {
+                console.log("Meal not found or no changes made");
+                res.status(404).json({ error: "Meal not found or no changes made" });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
 
 router.patch("/ingredients", passport.authenticate("jwt", { session: false }), async (req, res) => {
     const { id } = req.body; // Assuming you send the id of the ingredient to be updated
@@ -44,11 +87,10 @@ router.delete(
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         const { mealId } = req.body;
-
         const query = "DELETE FROM Ingredients WHERE meal_id = $1 ";
-        res.sendStatus(200);
         try {
-            const res = await pool.query(query, [mealId]);
+            await pool.query(query, [mealId]);
+            res.status(200);
         } catch (error) {
             console.error(error);
         }
