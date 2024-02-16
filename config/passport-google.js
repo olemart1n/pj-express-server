@@ -9,7 +9,10 @@ passport.use(
             // google strategy options
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "/api/auth/google/redirect",
+            callbackURL:
+                process.env.ENVIRONMENT === "dev"
+                    ? "http://localhost:3000/v1/auth/google/redirect"
+                    : "https://api.planleggjula.no/v1/auth/google/redirect",
         },
 
         async (accessToken, refreshToken, profile, done) => {

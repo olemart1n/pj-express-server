@@ -9,12 +9,15 @@ passport.use(
         {
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: "/api/auth/github/redirect",
+            callbackURL:
+                process.env.ENVIRONMENT === "dev"
+                    ? "http://localhost:3000/v1/auth/github/redirect"
+                    : "https://api.planleggjula.no/v1/auth/github/redirect",
         },
         async (accessToken, refreshToken, profile, done) => {
             // passport callback function
             const { displayName } = profile;
-            const req = await fetch("https://api.github.com/user/emails", {
+            const req = await fetch("https://v1.github.com/user/emails", {
                 headers: {
                     Authorization: "token " + accessToken,
                 },

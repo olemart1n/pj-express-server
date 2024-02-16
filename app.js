@@ -1,5 +1,5 @@
 const express = require("express");
-const api = require("./api");
+const v1 = require("./v1");
 require("dotenv").config();
 require("./config/passport-google.js");
 require("./config/passport-github.js");
@@ -47,7 +47,7 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(sendResponse);
 app.set("view engine, ejs");
-app.use("/api", api);
+app.use("/v1", v1);
 // app.set("trust proxy", 1);
 app.get("/", (req, res) => {
     res.send("server is up and running");

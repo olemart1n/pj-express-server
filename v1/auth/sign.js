@@ -8,12 +8,15 @@ require("dotenv").config();
 router.post("/sign", async (req, res) => {
     const { username, email, password } = req.body;
     const user = await findUserByEmail(email);
-    if (!user && !username) {
-        res.status(401).json({ data: null, error: "Wrong credentials" });
+    if (user.is_oauth_user) {
+        res.status(401).json({ data: null, error: "Feil innloggings-metode" });
+        return;
+    } else if (!user && !username) {
+        res.status(401).json({ data: null, error: "Feil email eller passord" });
         return;
     } else if (!username && user) {
         const correctPassword = user && bcrypt.compareSync(password, user.password_hash);
-        !correctPassword && res.status(401).json({ data: null, error: "Wrong credentials" });
+        !correctPassword && res.status(401).json({ data: null, error: "Feil email eller passord" });
         const token = jwt.sign({ sub: user.id }, process.env.COOKIE_KEY, {
             expiresIn: "100h",
         });
